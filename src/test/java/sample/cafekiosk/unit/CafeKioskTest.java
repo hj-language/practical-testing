@@ -3,6 +3,7 @@ package sample.cafekiosk.unit;
 import org.junit.jupiter.api.Test;
 import sample.cafekiosk.unit.beverage.Americano;
 import sample.cafekiosk.unit.beverage.Latte;
+import sample.cafekiosk.unit.order.Order;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -72,5 +73,18 @@ class CafeKioskTest {
 
         cafeKiosk.clear();
         assertThat(cafeKiosk.getBeverages()).isEmpty();
+    }
+
+    @Test
+    void createOrder() {
+        CafeKiosk cafeKiosk = new CafeKiosk();
+        cafeKiosk.add(new Americano());
+
+        Order order = cafeKiosk.createOrder();
+        assertThat(order.getBeverages()).hasSize(1);
+        assertThat(order.getBeverages().getFirst().getName()).isEqualTo("아메리카노");
+//        assertThatThrownBy(cafeKiosk::createOrder)
+//                .isInstanceOf(IllegalArgumentException.class)
+//                .hasMessage("주문 가능 시간이 아닙니다. 관리자에게 문의하세요.");
     }
 }
