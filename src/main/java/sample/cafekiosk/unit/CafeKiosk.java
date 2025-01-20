@@ -37,12 +37,6 @@ public class CafeKiosk {
         beverages.clear();
     }
 
-//    public int calculateTotalPrice() {
-//        return beverages.stream()
-//                .mapToInt(Beverage::getPrice)
-//                .sum();
-//    }
-
     public Order createOrder() {
         LocalTime currentTime = LocalDateTime.now().toLocalTime();
         if (currentTime.isBefore(SHOP_OPEN_TIME) || currentTime.isAfter(SHOP_CLOSE_TIME)) {
@@ -58,10 +52,12 @@ public class CafeKiosk {
             throw new IllegalArgumentException("주문 가능 시간이 아닙니다. 관리자에게 문의하세요.");
         }
 
-        return new Order(LocalDateTime.now(), beverages);
+        return new Order(currentDateTime, beverages);
     }
 
     public int calculateTotalPrice() {
-        return 8500;
+        return beverages.stream()
+                .mapToInt(Beverage::getPrice)
+                .sum();
     }
 }
