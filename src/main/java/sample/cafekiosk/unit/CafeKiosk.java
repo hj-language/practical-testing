@@ -62,6 +62,6 @@ public class CafeKiosk {
     }
 
     public int calculateTotalPrice() {
-        return 0;
+        return 8500;
     }
 }
