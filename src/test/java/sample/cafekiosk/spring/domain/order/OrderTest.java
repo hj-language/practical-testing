@@ -6,6 +6,7 @@ import sample.cafekiosk.spring.domain.product.Product;
 import sample.cafekiosk.spring.domain.product.ProductSellingStatus;
 import sample.cafekiosk.spring.domain.product.ProductType;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -21,7 +22,7 @@ class OrderTest {
         );
 
         // when
-        Order order = Order.create(products);
+        Order order = Order.create(products, LocalDateTime.now());
 
         // then
         assertThat(order.getTotalPrice()).isEqualTo(3000);
@@ -37,10 +38,27 @@ class OrderTest {
         );
 
         // when
-        Order order = Order.create(products);
+        Order order = Order.create(products, LocalDateTime.now());
 
         // then
         assertThat(order.getOrderStatus()).isEqualByComparingTo(OrderStatus.INIT);
+    }
+
+    @DisplayName("주문 생성 시 주문 등록 시간을 기록한다.")
+    @Test
+    void registeredDateTime() {
+        // given
+        LocalDateTime now = LocalDateTime.now();
+        List<Product> products = List.of(
+                createProduct("001", 1000),
+                createProduct("002", 2000)
+        );
+
+        // when
+        Order order = Order.create(products, now);
+
+        // then
+        assertThat(order.getRegisteredDateTime()).isEqualTo(now);
     }
 
     private Product createProduct(String productNumber, int price) {

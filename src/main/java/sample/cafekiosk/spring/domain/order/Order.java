@@ -28,13 +28,14 @@ public class Order extends BaseEntity {
     private int totalPrice;
     private LocalDateTime registeredDateTime;
 
-    public Order(List<Product> products) {
+    public Order(List<Product> products, LocalDateTime now) {
         this.orderStatus = OrderStatus.INIT;
         this.totalPrice = calculateTotalPrice(products);
+        this.registeredDateTime = now;
     }
 
-    public static Order create(List<Product> products) {
-        return new Order(products);
+    public static Order create(List<Product> products, LocalDateTime registeredDateTime) {
+        return new Order(products, registeredDateTime);
     }
 
     private int calculateTotalPrice(List<Product> products) {
