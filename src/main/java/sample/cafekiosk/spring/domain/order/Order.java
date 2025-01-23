@@ -12,14 +12,13 @@ import sample.cafekiosk.spring.domain.product.Product;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "orders")
 @Entity
 public class Order extends BaseEntity {
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private final List<OrderProduct> orderProducts = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
@@ -27,11 +26,14 @@ public class Order extends BaseEntity {
     private OrderStatus orderStatus;
     private int totalPrice;
     private LocalDateTime registeredDateTime;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderProduct> orderProducts = new ArrayList<>();
 
     public Order(List<Product> products, LocalDateTime now) {
         this.orderStatus = OrderStatus.INIT;
         this.totalPrice = calculateTotalPrice(products);
         this.registeredDateTime = now;
+        this.orderProducts = products.stream().map(product -> new OrderProduct(this, product)).collect(Collectors.toList());
     }
 
     public static Order create(List<Product> products, LocalDateTime registeredDateTime) {
