@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import sample.cafekiosk.spring.api.controller.order.request.OrderCreateRequest;
 import sample.cafekiosk.spring.api.service.order.response.OrderResponse;
 import sample.cafekiosk.spring.domain.product.Product;
@@ -17,6 +18,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
+@ActiveProfiles("test")
 @SpringBootTest
 class OrderServiceTest {
     @Autowired
@@ -29,6 +31,7 @@ class OrderServiceTest {
     @Test
     void createOrder() {
         // given
+        LocalDateTime now = LocalDateTime.now();
         Product product1 = this.createProduct("001", ProductType.HANDMADE, 1000);
         Product product2 = this.createProduct("002", ProductType.HANDMADE, 3000);
         Product product3 = this.createProduct("003", ProductType.HANDMADE, 5000);
@@ -38,14 +41,14 @@ class OrderServiceTest {
                 .build();
 
         // when
-        OrderResponse orderResponse = orderService.createOrder(request, LocalDateTime.now());
+        OrderResponse orderResponse = orderService.createOrder(request, now);
 
         // then
         assertThat(orderResponse.getId()).isNotNull();
 
         assertThat(orderResponse)
                 .extracting("registeredDateTime", "totalPrice")
-                .contains(LocalDateTime.now(), 4000);
+                .contains(now, 4000);
 
         assertThat(orderResponse.getProducts()).hasSize(2)
                 .extracting("productNumber", "price")
