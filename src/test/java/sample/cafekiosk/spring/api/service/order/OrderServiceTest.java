@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import sample.cafekiosk.spring.api.controller.order.request.OrderCreateRequest;
 import sample.cafekiosk.spring.domain.product.Product;
 import sample.cafekiosk.spring.domain.product.ProductRepository;
 import sample.cafekiosk.spring.domain.product.ProductSellingStatus;
@@ -27,6 +28,9 @@ class OrderServiceTest {
         Product product2 = this.createProduct("002", ProductType.HANDMADE, 3000);
         Product product3 = this.createProduct("003", ProductType.HANDMADE, 5000);
         productRepository.saveAll(List.of(product1, product2, product3));
+        OrderCreateRequest request = OrderCreateRequest.builder()
+                .productNumbers(List.of("001", "002"))
+                .build();
 
         // when
 
