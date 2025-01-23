@@ -11,7 +11,11 @@ import sample.cafekiosk.spring.domain.product.ProductRepository;
 import sample.cafekiosk.spring.domain.product.ProductSellingStatus;
 import sample.cafekiosk.spring.domain.product.ProductType;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.tuple;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @DataJpaTest
 class OrderServiceTest {
@@ -37,6 +41,18 @@ class OrderServiceTest {
         OrderResponse orderResponse = orderService.createOrder(request);
 
         // then
+        assertThat(orderResponse.getId()).isNotNull();
+
+        assertThat(orderResponse)
+                .extracting("registeredDateTime", "totalPrice")
+                .contains(LocalDateTime.now(), 4000);
+
+        assertThat(orderResponse.getProducts()).hasSize(2)
+                .extracting("productNumber", "price")
+                .containsExactlyInAnyOrder(
+                        tuple("001", 1000),
+                        tuple("002", 3000)
+                );
     }
 
     private Product createProduct(String productNumber, ProductType productType, int price) {
