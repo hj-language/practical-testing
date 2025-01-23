@@ -7,7 +7,6 @@ import sample.cafekiosk.spring.api.service.order.response.OrderResponse;
 @Service
 public class OrderService {
     public OrderResponse createOrder(OrderCreateRequest request) {
-
         return null;
     }
 }
